@@ -2,17 +2,12 @@
 
 **Professional-grade pixel art sprite editor and animator** built with HTML5 Canvas. Create sprites, animate them, and export with industry-standard tools!
 
-**🎊 NEW in v2.0:** 74 new features including 20 blend modes, layer masks & effects, auto-save, onion skinning, custom brushes, pattern fills, symmetry modes, transform tools, sprite atlas export, and much more! [See full changelog below](#-version-history)
-
 ## 👻 Credits
 
 **Foundation & Core Development:** 🎃 **Spooki** of CoraTO  
 **Additional Features & Refinements:** 🐱 **Mewsie** of CoraTO
 
 ---
-
-# View a live version [here](https://tools.mewsie.world/SpriteEditor.html)!
-
 
 [![Preview](preview.gif)](https://tools.mewsie.world/SpriteEditor.html)
 
