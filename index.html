@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨🎃🎀 Spooksie's Stinky Sprite Tool v2.0</title>
+    <link rel="stylesheet" href="code/spooksies_sprite_tool.css">
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+</head>
+
+<body>
+
+    <h1>✨🎃🎀 Spooksie's Stinky Sprite Tool v2.0</h1>
+
+    <div id="editor-layout">
+
+        <div id="controls-panel">
+
+            <div class="control-group">
+                <div id="current-tool-display"
+                    style="padding: 8px; background-color: #e3f2fd; border: 1px solid #2196f3; border-radius: 4px; margin-bottom: 10px; text-align: center; font-weight: bold;">
+                    <span id="current-tool-text">Pencil (Circle)</span>
+                </div>
+
+                <label class="control-label">Primary Color (Tool Color):</label>
+                <div id="color-picker-wrapper">
+                    <input type="color" id="color-picker" value="#000000" title="Click to open color picker">
+                    <input type="text" id="current-color-display" value="#000000" maxlength="7"
+                        style="width: 90px; padding: 4px 6px; text-transform: uppercase; font-family: 'Courier New', monospace; font-size: 13px; font-weight: bold; border: 1px solid #ccc; border-radius: 3px; text-align: center;"
+                        placeholder="#000000" title="Hex color">
+                </div>
+                <button onclick="document.getElementById('eyedropper-input').click()"
+                    style="background-color: #00bcd4; border-color: #00bcd4; font-size: 0.8em; margin-top: 5px;">
+                    💧 Pick from Image
+                </button>
+                <input type="file" id="eyedropper-input" accept="image/*" style="display: none;"
+                    onchange="pickColorFromImage(event)">
+
+                <div style="margin-top: 10px;">
+                    <label class="control-label">Recent Colors:</label>
+                    <div id="recent-colors-preview"
+                        style="display: flex; flex-wrap: wrap; gap: 3px; padding: 8px; border: 1px solid #2196f3; border-radius: 4px; min-height: 30px; background-color: #e3f2fd;">
+                    </div>
+                </div>
+
+                <div id="secondary-color-section" style="display:none;">
+                    <label class="control-label" style="margin-top: 10px;">Secondary Color (Gradient End):</label>
+                    <div id="color-picker-wrapper-secondary">
+                        <input type="color" id="color-picker-secondary" value="#FFFFFF"
+                            title="Click to open color picker">
+                        <input type="text" id="secondary-color-display" value="#FFFFFF" maxlength="7"
+                            style="width: 90px; padding: 4px 6px; text-transform: uppercase; font-family: 'Courier New', monospace; font-size: 13px; font-weight: bold; border: 1px solid #ccc; border-radius: 3px; text-align: center;"
+                            placeholder="#FFFFFF" title="Hex color">
+                    </div>
+                </div>
+
+                <div id="gradient-length-controls" style="display:none;">
+                    <label class="control-label">Gradient Max Length (Pixels): <span
+                            id="gradient-length-display">32px</span></label>
+                    <input type="range" id="gradient-length-slider" min="1" max="100" value="32" step="1"
+                        oninput="document.getElementById('gradient-length-display').textContent = this.value + 'px'; updateGradientLength(this.value);">
+                </div>
+
+                <div id="pattern-fill-controls" style="display:none;">
+                    <label class="control-label">Fill Pattern:</label>
+                    <select id="pattern-select" onchange="updateCurrentPattern(this.value)"
+                        style="width: 100%; padding: 5px; margin-top: 5px;">
+                        <option value="dots">Dots</option>
+                        <option value="checker">Checkerboard</option>
+                        <option value="stripes-h">Horizontal Stripes</option>
+                        <option value="stripes-v">Vertical Stripes</option>
+                        <option value="diagonal">Diagonal Lines</option>
+                        <option value="crosshatch">Crosshatch</option>
+                        <option value="bricks">Bricks</option>
+                        <option value="hexagon">Hexagons</option>
+                    </select>
+                </div>
+
+                <div id="symmetry-controls" style="display:none;">
+                    <label class="control-label">Symmetry Mode:</label>
+                    <select id="symmetry-select" onchange="updateSymmetryMode(this.value)"
+                        style="width: 100%; padding: 5px; margin-top: 5px;">
+                        <option value="horizontal">Horizontal (2-way)</option>
+                        <option value="vertical">Vertical (2-way)</option>
+                        <option value="quad">Quad (4-way)</option>
+                        <option value="radial8">Radial (8-way)</option>
+                        <option value="radial16">Radial (16-way)</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Brush Size: <span id="brush-size-display">1x1</span></label>
+                <input type="range" id="brush-size-slider" min="1" max="32" value="1" step="1">
+
+                <div style="margin-top: 10px;">
+                    <label class="control-label">Brush Shape:</label>
+                    <select id="brush-shape-select" onchange="updateBrushShape(this.value)"
+                        style="width: 100%; padding: 5px;">
+                        <option value="circle">Circle</option>
+                        <option value="square">Square</option>
+                        <option value="plus">Plus (+)</option>
+                        <option value="x">X Shape</option>
+                        <option value="diamond">Diamond</option>
+                        <option value="star">Star</option>
+                        <option value="custom">Custom...</option>
+                    </select>
+                    <div id="custom-brush-controls" style="display: none;">
+                        <button onclick="createCustomBrush()"
+                            style="background-color: #9c27b0; border-color: #9c27b0; font-size: 0.8em; margin-top: 5px; width: 100%;">
+                            🎨 Create Custom Brush
+                        </button>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px;">
+                            <button onclick="saveCustomBrush()"
+                                style="background-color: #28a745; border-color: #28a745; font-size: 0.75em;">💾 Save
+                                Brush</button>
+                            <button onclick="document.getElementById('custom-brush-load-input').click()"
+                                style="background-color: #17a2b8; border-color: #17a2b8; font-size: 0.75em;">📥 Load
+                                Brush</button>
+                        </div>
+                        <input type="file" id="custom-brush-load-input" accept=".brush,.json" style="display: none;"
+                            onchange="loadCustomBrush(event)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Pencil Stroke Delay (ms): <span id="brush-speed-display">0ms</span></label>
+                <input type="range" id="brush-speed-slider" min="0" max="100" value="0" step="5"
+                    oninput="document.getElementById('brush-speed-display').textContent = this.value + 'ms'">
+            </div>
+
+            <div class="control-group">
+                <div id="selection-info-display"
+                    style="display:none; padding: 6px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin-bottom: 10px; text-align: center; font-size: 0.9em;">
+                    <strong>Selection: <span id="selection-pixel-count">0</span> pixels</strong>
+                </div>
+
+                <!-- Undo/Redo -->
+                <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                    <button onclick="undo()"
+                        style="flex: 1; background-color: #ffc107; border-color: #ffc107; color: #333;">↶ Undo
+                        (Ctrl+Z)</button>
+                    <button onclick="redo()"
+                        style="flex: 1; background-color: #ffc107; border-color: #ffc107; color: #333;">↷ Redo
+                        (Ctrl+Y)</button>
+                </div>
+
+
+
+                <!-- Brush Tools Section -->
+                <div class="tool-category">
+                    <button class="category-main-btn">
+                        🖌️ Brush Tools
+                    </button>
+                    <div class="tools-grid category-tools">
+                        <button id="pencil-btn" onclick="activateTool('pencil')">Pencil (Circle)</button>
+                        <button id="pencilsquare-btn" onclick="activateTool('pencilsquare')">Pencil (Square)</button>
+                        <button id="refined-btn" onclick="activateTool('refined')"
+                            style="background-color: #17a2b8; border-color: #17a2b8;">1px</button>
+                        <button id="fill-btn" onclick="activateTool('fill')">Fill</button>
+                        <button id="pattern-btn" onclick="activateTool('pattern')"
+                            style="background-color: #009688; border-color: #009688;">Pattern Fill</button>
+                        <button id="dither-btn" onclick="activateTool('dither')"
+                            style="background-color: #795548; border-color: #795548;">Dither</button>
+                        <button id="jumble-btn" onclick="activateTool('jumble')"
+                            style="background-color: #607d8b; border-color: #607d8b;">Jumble</button>
+                        <button id="spray-btn" onclick="activateTool('spray')"
+                            style="background-color: #ab47bc; border-color: #ab47bc;">Spray</button>
+                        <button id="clone-btn" onclick="activateTool('clone')"
+                            style="background-color: #00bcd4; border-color: #00bcd4;">Clone Stamp</button>
+                        <button id="erasecolor-btn" onclick="activateTool('erasecolor')"
+                            style="background-color: #e91e63; border-color: #e91e63;">Erase Color</button>
+                        <button id="magiceraser-btn" onclick="activateTool('magiceraser')"
+                            style="background-color: #f44336; border-color: #f44336;">Magic Eraser</button>
+                        <button id="eraser-btn" onclick="activateTool('eraser')">Eraser</button>
+                    </div>
+                </div>
+
+                <!-- Color Tools Section -->
+                <div class="tool-category" style="margin-top: 8px;">
+                    <button class="category-main-btn" style="background-color: #fd7e14; border-color: #fd7e14;">
+                        🎨 Color Tools
+                    </button>
+                    <div class="tools-grid category-tools">
+                        <button id="blend-btn" onclick="activateTool('blend')"
+                            style="background-color: #fd7e14; border-color: #fd7e14;">Blend</button>
+                        <button id="sharpen-btn" onclick="activateTool('sharpen')"
+                            style="background-color: #00bcd4; border-color: #00bcd4;">Sharpen</button>
+                        <button id="depth-btn" onclick="activateTool('depth')"
+                            style="background-color: #343a40; border-color: #343a40;">Shadow</button>
+                        <button id="highlight-btn" onclick="activateTool('highlight')"
+                            style="background-color: #ffc107; border-color: #ffc107; color:#333;">Highlight</button>
+                        <button id="rainbow-btn" onclick="activateTool('rainbow')"
+                            style="background-color: #e91e63; border-color: #e91e63;">Rainbow</button>
+                        <button id="gradient-btn" onclick="activateTool('gradient')"
+                            style="background-color: #6f42c1; border-color: #6f42c1;">Gradient</button>
+                        <button id="liquify-btn" onclick="activateTool('liquify')"
+                            style="background-color: #00bcd4; border-color: #00bcd4;">Liquify</button>
+                        <button id="curves-btn" onclick="showColorCurves()"
+                            style="background-color: #9c27b0; border-color: #9c27b0;">Color Curves</button>
+                    </div>
+                </div>
+
+                <!-- Canvas-Based Tools Section -->
+                <div class="tool-category" style="margin-top: 8px;">
+                    <button class="category-main-btn" style="background-color: #00acc1; border-color: #00acc1;">
+                        📐 Canvas Tools
+                    </button>
+                    <div class="tools-grid category-tools">
+                        <button id="rectselect-btn" onclick="activateTool('rectselect')"
+                            style="background-color: #00acc1; border-color: #00acc1;">Rectangle</button>
+                        <button id="circleselect-btn" onclick="activateTool('circleselect')"
+                            style="background-color: #66bb6a; border-color: #66bb6a;">Circle</button>
+                        <button id="colorselect-btn" onclick="activateTool('colorselect')"
+                            style="background-color: #ff5722; border-color: #ff5722;">Color</button>
+                        <button id="edgeselect-btn" onclick="activateTool('edgeselect')"
+                            style="background-color: #ff9800; border-color: #ff9800;">Edge Detect</button>
+                        <button id="lasso-btn" onclick="activateTool('lasso')"
+                            style="background-color: #28a745; border-color: #28a745;">Lasso</button>
+                        <button id="symmetrical-btn" onclick="activateTool('symmetrical')"
+                            style="background-color: #ff9800; border-color: #ff9800;">Symmetry</button>
+                        <button id="pan-btn" onclick="activateTool('pan')">Pan</button>
+                        <button id="cancelselect-btn" onclick="clearSelection()"
+                            style="background-color: #6c757d; border-color: #6c757d;">Cancel selection</button>
+                    </div>
+                </div>
+
+                <!-- Shape Tools Section -->
+                <div class="tool-category" style="margin-top: 8px;">
+                    <button class="category-main-btn" style="background-color: #795548; border-color: #795548;">
+                        ⬜ Shape Tools
+                    </button>
+                    <div class="tools-grid category-tools">
+                        <button id="line-btn" onclick="activateTool('line')"
+                            style="background-color: #795548; border-color: #795548;">Line</button>
+                        <button id="curve-btn" onclick="activateTool('curve')"
+                            style="background-color: #00bcd4; border-color: #00bcd4;">Curve</button>
+                        <button id="contour-btn" onclick="activateTool('contour')"
+                            style="background-color: #9c27b0; border-color: #9c27b0;">Contour</button>
+                        <button id="polygon-btn" onclick="activateTool('polygon')"
+                            style="background-color: #3f51b5; border-color: #3f51b5;">Polygon</button>
+                        <button id="rectangle-btn" onclick="activateTool('rectangle')"
+                            style="background-color: #20c997; border-color: #20c997;">Rectangle</button>
+                        <button id="circle-btn" onclick="activateTool('circle')"
+                            style="background-color: #4caf50; border-color: #4caf50;">Circle</button>
+                        <button id="mesh-btn" onclick="activateTool('gradientmesh')"
+                            style="background-color: #9c27b0; border-color: #9c27b0;">Gradient Mesh</button>
+                        <button id="beziercurve-btn" onclick="activateTool('beziercurve')"
+                            style="background-color: #673ab7; border-color: #673ab7;">Bezier Brush</button>
+                    </div>
+                </div>
+
+                <div id="shape-fill-controls"
+                    style="display:none; margin-top: 10px; padding: 8px; border: 1px solid #00acc1; background-color: #e0f7fa; border-radius: 4px;">
+                    <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="shape-fill-checkbox" checked style="width: auto; margin: 0;">
+                        Fill Shape
+                    </label>
+                    <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px; margin-top: 5px;">
+                        <input type="checkbox" id="shape-gradient-checkbox" style="width: auto; margin: 0;">
+                        Gradient Fill
+                    </label>
+                    <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px; margin-top: 5px;">
+                        <input type="checkbox" id="circle-perfect-mode" style="width: auto; margin: 0;">
+                        Pixel-Perfect Circles
+                    </label>
+                </div>
+
+                <!-- Separator -->
+                <hr style="margin: 15px 0; border: none; border-top: 2px solid #6c757d;">
+
+                <!-- Global Tools Section -->
+                <div class="tool-category">
+                    <button class="category-main-btn" style="background-color: #6c757d; border-color: #6c757d;">
+                        🛠️ Global Tools
+                    </button>
+                    <div class="category-tools" style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                        <button onclick="eraseCanvas(true)">Clear Current Frame</button>
+                        <button onclick="clearSelection()"
+                            style="background-color: #6c757d; border-color: #6c757d;">Clear Selection</button>
+                        <button id="swap-btn" onclick="toggleColorSwap()"
+                            style="background-color: #8a2be2; border-color: #8a2be2;">Color Swap (Global)</button>
+                        <button id="remap-btn" onclick="toggleColorRemap()"
+                            style="background-color: #e91e63; border-color: #e91e63;">Color Remap (Multi)</button>
+                        <div id="swap-info"></div>
+                        <div id="remap-info"></div>
+                    </div>
+                </div>
+
+                <!-- Transform Tools Section -->
+                <div class="tool-category" style="margin-top: 8px;">
+                    <button class="category-main-btn" style="background-color: #9c27b0; border-color: #9c27b0;">
+                        🔄 Transform
+                    </button>
+                    <div class="category-tools" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                        <button onclick="rotateCurrentLayer(90)"
+                            style="background-color: #9c27b0; border-color: #9c27b0;">Rotate 90° ↻</button>
+                        <button onclick="rotateCurrentLayer(-90)"
+                            style="background-color: #673ab7; border-color: #673ab7;">Rotate 90° ↺</button>
+                        <button onclick="flipCurrentLayer('horizontal')"
+                            style="background-color: #3f51b5; border-color: #3f51b5;">Flip Horizontal ↔</button>
+                        <button onclick="flipCurrentLayer('vertical')"
+                            style="background-color: #2196f3; border-color: #2196f3;">Flip Vertical ↕</button>
+                        <button onclick="perspectiveTransform()"
+                            style="background-color: #00bcd4; border-color: #00bcd4;">Perspective 📐</button>
+                        <button onclick="undoTransformations()"
+                            style="background-color: #ffc107; border-color: #ffc107; color: #333; font-size: 0.85em;">Undo
+                            Recent xform</button>
+                    </div>
+                </div>
+
+                <!-- Batch Processing Section -->
+                <div class="tool-category" style="margin-top: 8px;">
+                    <button class="category-main-btn" style="background-color: #ff5722; border-color: #ff5722;">
+                        ⚡ Batch Process
+                    </button>
+                    <div class="category-tools" style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                        <button onclick="batchRotateAll(90)"
+                            style="background-color: #9c27b0; border-color: #9c27b0;">Rotate All Frames 90° ↻</button>
+                        <button onclick="batchFlipAll('horizontal')"
+                            style="background-color: #3f51b5; border-color: #3f51b5;">Flip All Horizontal</button>
+                        <button onclick="batchFlipAll('vertical')"
+                            style="background-color: #2196f3; border-color: #2196f3;">Flip All Vertical</button>
+                        <button onclick="batchAdjustBrightness()"
+                            style="background-color: #ffc107; border-color: #ffc107; color:#333;">Adjust All
+                            Brightness</button>
+                        <button onclick="batchCreateMagentaBackground()"
+                            style="background-color: #e91e63; border-color: #e91e63;">Create Magenta Background</button>
+                    </div>
+                </div>
+
+                <!-- Channel Operations Section -->
+                <div class="tool-category" style="margin-top: 8px;">
+                    <button class="category-main-btn" style="background-color: #e91e63; border-color: #e91e63;">
+                        📺 Channels
+                    </button>
+                    <div class="category-tools" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                        <button onclick="extractChannel('red')"
+                            style="background-color: #f44336; border-color: #f44336;">Extract Red</button>
+                        <button onclick="extractChannel('green')"
+                            style="background-color: #4caf50; border-color: #4caf50;">Extract Green</button>
+                        <button onclick="extractChannel('blue')"
+                            style="background-color: #2196f3; border-color: #2196f3;">Extract Blue</button>
+                        <button onclick="invertColors()"
+                            style="background-color: #9c27b0; border-color: #9c27b0;">Invert Colors</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="canvas-area">
+            <div id="tool-status"
+                style="padding: 8px; background-color: #e3f2fd; border: 1px solid #2196f3; border-radius: 4px; margin-bottom: 10px; text-align: center; font-size: 0.9em; min-height: 24px; display: none;">
+                <strong id="tool-status-text"></strong>
+            </div>
+            <div id="canvas-wrapper">
+                <div id="canvas-container">
+                    <canvas id="main-canvas" width="480" height="480"></canvas>
+                    <canvas id="grid-canvas" width="480" height="480"></canvas>
+                    <canvas id="selection-canvas" width="480" height="480"></canvas>
+                </div>
+            </div>
+
+            <div id="canvas-controls"
+                style="width: 640px; background-color: #fff; padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 10px;">
+                <div class="control-group">
+                    <label class="control-label">Sprite Size (Pixels):</label>
+                    <select onchange="applyPreset(this.value)" style="width: 100%; padding: 5px; margin-bottom: 5px;">
+                        <option value="">-- Presets --</option>
+                        <option value="30,30">Icon (30×30)</option>
+                        <option value="105,105">Portrait (105×105)</option>
+                        <option value="150,150">Full Character View (150×150)</option>
+                        <option value="8,8">Tiny (8×8)</option>
+                        <option value="16,16">Small (16×16)</option>
+                        <option value="32,32">Medium (32×32)</option>
+                        <option value="48,48">Large (48×48)</option>
+                        <option value="64,64">XLarge (64×64)</option>
+                    </select>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px;">
+                        <input type="checkbox" id="link-dimensions" checked onchange="toggleDimensionLink()"
+                            style="width: auto;">
+                        <label for="link-dimensions" style="font-size: 0.9em; margin: 0;">🔗 Link</label>
+                        <label style="font-size: 0.85em; margin: 0;">W:</label>
+                        <input type="number" id="grid-width-input" value="16" min="8" max="64" step="8"
+                            style="width: 60px;" oninput="updateDimensions('width')"
+                            onchange="updateDimensions('width')">
+                        <label style="font-size: 0.85em; margin: 0;">H:</label>
+                        <input type="number" id="grid-height-input" value="16" min="8" max="64" step="8"
+                            style="width: 60px;" oninput="updateDimensions('height')"
+                            onchange="updateDimensions('height')">
+                        <button onclick="resizeSprite(true)" style="flex-grow: 1;">Change Size & Migrate Data</button>
+                    </div>
+                </div>
+
+                <div class="control-group" style="border-top: 1px solid #eee; padding-top: 10px;">
+                    <label class="control-label">Canvas Zoom (View):</label>
+                    <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
+                        <div style="display:flex; gap:3px; align-items: center;">
+                            <button onclick="zoomCanvas(-1)" style="width: 35px;">-</button>
+                            <span id="zoom-level" style="width: 40px; text-align:center;">1x</span>
+                            <button onclick="zoomCanvas(1)" style="width: 35px;">+</button>
+                            <button onclick="zoomCanvas(0)" style="width: 80px;">Reset</button>
+                            <span style="font-size: 0.75em; margin-left: 5px;">*Use Scroll Wheel to zoom</span>
+                        </div>
+                        <button onclick="showKeyboardShortcuts()"
+                            style="background-color: #3f51b5; border-color: #3f51b5; white-space: nowrap;">⌨️
+                            Shortcuts</button>
+                    </div>
+                </div>
+
+                <div class="control-group" style="border-top: 1px solid #eee; padding-top: 10px;">
+                    <label class="control-label">👁️ Display Options:</label>
+
+                    <!-- Grid & Background Settings -->
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-top: 5px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label
+                                    style="font-size: 0.85em; font-weight: bold; display: block; margin-bottom: 3px;">Grid:</label>
+                                <select id="grid-visibility" onchange="updateGridVisibility()" style="width: 100%;">
+                                    <option value="high">High Contrast</option>
+                                    <option value="low">Low Contrast</option>
+                                    <option value="none">No Grid</option>
+                                </select>
+                                <label
+                                    style="font-size: 0.75em; margin-top: 8px; display: block; margin-bottom: 3px;">Line
+                                    Color:</label>
+                                <div style="display: flex; gap: 5px; align-items: center;">
+                                    <input type="color" id="grid-color-picker" value="#333333"
+                                        oninput="updateGridLineColor()" style="height: 30px; flex-shrink: 0;">
+                                    <input type="text" id="grid-color-hex" value="#333333" maxlength="7"
+                                        style="flex: 1; text-transform: uppercase; font-family: monospace;">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label
+                                    style="font-size: 0.75em; display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
+                                    <input type="checkbox" id="darkened-grid-enabled" checked
+                                        onchange="toggleDarkenedGrid()" style="width: auto; margin: 0;">
+                                    Darkened Grid Pattern
+                                </label>
+                                <div style="display: flex; align-items: center; gap: 3px; flex-wrap: wrap;">
+                                    <label style="font-size: 0.7em; white-space: nowrap;">Every:</label>
+                                    <input type="number" id="darkened-grid-size" value="4" min="1" step="1"
+                                        oninput="drawGrid()" onchange="drawGrid()"
+                                        style="width: 45px; padding: 2px; font-size: 0.85em;">
+                                    <label style="font-size: 0.7em;">cells</label>
+                                    <input type="color" id="darkened-grid-color" value="#000000"
+                                        oninput="updateDarkenedGridColor()"
+                                        style="width: 30px; height: 22px; padding: 0; border: 1px solid #ccc; cursor: pointer;">
+                                    <input type="text" id="darkened-grid-hex" value="#000000" maxlength="7"
+                                        style="width: 60px; padding: 2px; text-transform: uppercase; font-family: monospace; font-size: 0.75em;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="min-width: 0;">
+                            <label
+                                style="font-size: 0.85em; font-weight: bold; display: block; margin-bottom: 3px;">Canvas
+                                BG:</label>
+                            <select id="canvas-bg-preset" onchange="updateCanvasBackground()" style="width: 100%;">
+                                <option value="#ffffff">White</option>
+                                <option value="#000000">Black</option>
+                                <option value="#808080">Gray</option>
+                                <option value="checker">Checkerboard</option>
+                                <option value="custom">Custom Color</option>
+                            </select>
+                            <label
+                                style="font-size: 0.75em; margin-top: 8px; display: block; margin-bottom: 3px;">Custom:</label>
+                            <div style="display: flex; gap: 5px; align-items: center;">
+                                <input type="color" id="canvas-bg-color" value="#ffffff" oninput="updateCanvasBGColor()"
+                                    style="height: 30px; flex-shrink: 0;">
+                                <input type="text" id="canvas-bg-hex" value="#FFFFFF" maxlength="7"
+                                    style="flex: 1; text-transform: uppercase; font-family: monospace; font-size: 0.85em;">
+                            </div>
+                            <div style="font-size: 0.65em; color: #666; margin-top: 5px;">*Affects BMP exports</div>
+                        </div>
+                    </div>
+
+                    <!-- View Options (Checkboxes) -->
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; padding: 8px; background-color: #f8f9fa; border-radius: 4px;">
+                        <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perspective-grid-enabled" onchange="togglePerspectiveGrid()"
+                                style="width: auto; margin: 0;">
+                            Perspective Grid
+                        </label>
+
+                        <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="dark-mode-enabled" onchange="toggleDarkMode()"
+                                style="width: auto; margin: 0;">
+                            Dark Mode
+                        </label>
+
+                        <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="guides-enabled" onchange="toggleGuides()"
+                                style="width: auto; margin: 0;">
+                            Guides & Rulers
+                        </label>
+
+                        <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="auto-save-enabled" onchange="toggleAutoSave()" checked
+                                style="width: auto; margin: 0;">
+                            Auto-Save (1 min)
+                        </label>
+
+                        <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="tilemap-mode-enabled" onchange="toggleTilemapMode()"
+                                style="width: auto; margin: 0;">
+                            Tilemap Mode
+                        </label>
+
+                        <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="onion-skin-enabled" onchange="toggleOnionSkin()"
+                                style="width: auto; margin: 0;">
+                            Onion Skinning
+                        </label>
+                    </div>
+
+                    <!-- Expandable Controls -->
+                    <div id="guides-controls"
+                        style="display:none; padding: 8px; background-color: #e3f2fd; border: 1px solid #2196f3; border-radius: 4px; margin-top: 8px;">
+                        <button onclick="addVerticalGuide()"
+                            style="background-color: #2196f3; border-color: #2196f3; font-size: 0.8em; width: 100%;">Add
+                            Vertical Guide</button>
+                        <button onclick="addHorizontalGuide()"
+                            style="background-color: #2196f3; border-color: #2196f3; font-size: 0.8em; width: 100%; margin-top: 4px;">Add
+                            Horizontal Guide</button>
+                        <button onclick="manageGuides()"
+                            style="background-color: #ff9800; border-color: #ff9800; font-size: 0.8em; width: 100%; margin-top: 4px;">Manage
+                            Guides</button>
+                        <button onclick="clearAllGuides()"
+                            style="background-color: #dc3545; border-color: #dc3545; font-size: 0.8em; width: 100%; margin-top: 4px;">Clear
+                            All Guides</button>
+                    </div>
+
+                    <div id="tilemap-controls"
+                        style="display:none; padding: 8px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin-top: 8px;">
+                        <label style="font-size: 0.8em; display: block; margin-bottom: 4px;">Tile Size: <span
+                                id="tile-size-display">8x8</span></label>
+                        <input type="range" id="tile-size-slider" min="4" max="32" value="8" step="4"
+                            oninput="updateTileSize()" style="width: 100%;">
+                    </div>
+
+                    <div id="onion-skin-controls"
+                        style="display:none; padding: 8px; background-color: #f0f7ff; border: 1px solid #2196f3; border-radius: 4px; margin-top: 8px;">
+                        <label style="font-size: 0.8em; display: block; margin-bottom: 4px;">Prev Frames: <span
+                                id="onion-prev-opacity-display">30%</span></label>
+                        <input type="range" id="onion-prev-opacity" min="0" max="100" value="30" step="5"
+                            oninput="updateOnionOpacity()" style="width: 100%;">
+
+                        <label style="font-size: 0.8em; display: block; margin-top: 6px; margin-bottom: 4px;">Next
+                            Frames: <span id="onion-next-opacity-display">30%</span></label>
+                        <input type="range" id="onion-next-opacity" min="0" max="100" value="30" step="5"
+                            oninput="updateOnionOpacity()" style="width: 100%;">
+
+                        <label style="font-size: 0.8em; display: block; margin-top: 6px; margin-bottom: 4px;">Frames
+                            Count: <span id="onion-frame-count-display">1</span></label>
+                        <input type="range" id="onion-frame-count" min="1" max="5" value="1" step="1"
+                            oninput="updateOnionOpacity()" style="width: 100%;">
+                    </div>
+                </div>
+
+                <div class="control-group" style="border-top: 1px solid #eee; padding-top: 10px;">
+                    <button onclick="quickExportFuseTool()" style="width: 100%; padding: 10px; margin-bottom: 15px; font-weight: bold; font-size: 1.1em; background-color: #e91e63; border-color: #e91e63; color: white; border-radius: 4px; cursor: pointer;">
+                        🚀 Quick Export for Fuse Tool
+                    </button>
+                    <!-- File Management Umbrella Section -->
+                    <div class="tool-category">
+                        <button class="category-main-btn" style="background-color: #6c757d; border-color: #6c757d;">
+                            📁 File Management
+                        </button>
+                        <div class="category-tools" style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+
+                            <!-- Project Save/Load Section -->
+                            <div class="tool-category" style="margin-top: 0;">
+                                <button class="category-main-btn"
+                                    style="background-color: #6f42c1; border-color: #6f42c1;">
+                                    💾 Project
+                                </button>
+                                <div class="category-tools"
+                                    style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                                    <button onclick="saveProject()"
+                                        style="background-color: #6f42c1; border-color: #6f42c1;">Save Project
+                                        (JSON)</button>
+                                    <button onclick="document.getElementById('project-load-input').click()"
+                                        style="background-color: #9c27b0; border-color: #9c27b0;">Load Project
+                                        (JSON)</button>
+                                    <button onclick="saveWorkspace()"
+                                        style="background-color: #3f51b5; border-color: #3f51b5;">Save Workspace
+                                        Layout</button>
+                                    <button onclick="loadWorkspace()"
+                                        style="background-color: #2196f3; border-color: #2196f3;">Load Workspace
+                                        Layout</button>
+                                    <input type="file" id="project-load-input" accept=".json" style="display: none;"
+                                        onchange="loadProject(event)">
+                                </div>
+                            </div>
+
+                            <!-- Image Import Section -->
+                            <div class="tool-category" style="margin-top: 5px;">
+                                <button class="category-main-btn"
+                                    style="background-color: #ff9800; border-color: #ff9800;">
+                                    📥 Image Import
+                                </button>
+                                <div class="category-tools"
+                                    style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                                    <button onclick="document.getElementById('spritesheet-import-input').click()"
+                                        style="background-color: #ff9800; border-color: #ff9800;">Import Sprite
+                                        Sheet</button>
+                                    <button onclick="document.getElementById('bulk-import-input').click()"
+                                        style="background-color: #f57c00; border-color: #f57c00;">Bulk Import
+                                        Images</button>
+                                    <input type="file" id="spritesheet-import-input" accept="image/*"
+                                        style="display: none;" onchange="importSpriteSheet(event)">
+                                    <input type="file" id="bulk-import-input" accept="image/*" multiple
+                                        style="display: none;" onchange="bulkImportImages(event)">
+                                </div>
+                            </div>
+
+                            <!-- Image Export Options Section -->
+                            <div class="tool-category" style="margin-top: 5px;">
+                                <button class="category-main-btn"
+                                    style="background-color: #28a745; border-color: #28a745;">
+                                    💾 Image Export
+                                </button>
+                                <div class="category-tools"
+                                    style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                                    <button onclick="exportSpriteSheet()"
+                                        style="background-color: #28a745; border-color: #28a745;">Sprite Sheet
+                                        (PNG)</button>
+                                    <button onclick="exportSpriteAtlas()"
+                                        style="background-color: #9c27b0; border-color: #9c27b0;">Sprite Atlas
+                                        (PNG+JSON)</button>
+                                    <button onclick="exportFramesBMP()"
+                                        style="background-color: #17a2b8; border-color: #17a2b8;">Background Frames
+                                        (BMP)</button>
+                                    <button id="gif-export-btn" onclick="exportAnimationGIF()"
+                                        style="background-color: #6f42c1; border-color: #6f42c1;">Transparent Animation
+                                        (GIF)</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="frames-panel">
+            <h2>Layers</h2>
+
+            <div id="layer-list"
+                style="max-height: 150px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px; padding: 5px; margin-bottom: 10px;">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button onclick="addLayer()" style="flex-grow: 1; background-color: #17a2b8; border-color: #17a2b8;">Add
+                    Layer</button>
+                <button onclick="deleteLayer()"
+                    style="flex-grow: 1; background-color: #dc3545; border-color: #dc3545;">Delete Layer</button>
+            </div>
+
+            <hr style="margin: 15px 0;">
+
+            <h2>Animation Frames</h2>
+
+            <div style="margin-bottom: 10px;">
+                <label style="font-size: 0.85em; display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" id="timeline-view-enabled" onchange="toggleTimelineView()"
+                        style="width: auto; margin: 0;">
+                    Timeline View
+                </label>
+            </div>
+
+            <div id="timeline-container"
+                style="display:none; margin-bottom: 10px; border: 2px solid #2196f3; border-radius: 4px; padding: 10px; background: #e3f2fd;">
+                <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
+                    <button onclick="scrubToFrame(0)" style="padding: 3px 8px;">⏮️</button>
+                    <button onclick="scrubToFrame(currentFrameIndex - 1)" style="padding: 3px 8px;">◀️</button>
+                    <input type="range" id="timeline-scrubber" min="0" max="0" value="0"
+                        oninput="scrubToFrame(parseInt(this.value))" style="flex: 1;">
+                    <button onclick="scrubToFrame(currentFrameIndex + 1)" style="padding: 3px 8px;">▶️</button>
+                    <button onclick="scrubToFrame(frames.length - 1)" style="padding: 3px 8px;">⏭️</button>
+                </div>
+                <div style="font-size: 0.8em; text-align: center; color: #666;">
+                    Frame <span id="timeline-current">1</span> / <span id="timeline-total">1</span>
+                </div>
+            </div>
+
+            <div id="frame-thumbnails">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
+                <button onclick="moveFrameLeft()" style="flex-grow: 1;">◄ Move Frame Left</button>
+                <button onclick="moveFrameRight()" style="flex-grow: 1;">Move Frame Right ►</button>
+            </div>
+
+            <!-- Frame Tools Section -->
+            <div class="tool-category">
+                <button class="category-main-btn" style="background-color: #007bff; border-color: #007bff;">
+                    🎞️ Frame Tools
+                </button>
+                <div class="category-tools" style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                    <button onclick="addFrame('clone')" style="background-color: #007bff; border-color: #007bff;">Clone
+                        Frame</button>
+                    <button onclick="addFrame('blank')"
+                        style="background-color: #ffc107; border-color: #ffc107; color:#333;">Blank Frame</button>
+                    <button onclick="deleteFrame()" style="background-color: #dc3545; border-color: #dc3545;">Delete
+                        Frame</button>
+                    <button onclick="copyCurrentFrame()" style="background-color: #17a2b8; border-color: #17a2b8;">Copy
+                        Frame</button>
+                    <button onclick="pasteToCurrentFrame()"
+                        style="background-color: #28a745; border-color: #28a745;">Paste Frame</button>
+                    <button onclick="setLoopPoint()" style="background-color: #ff9800; border-color: #ff9800;">Set Loop
+                        Point</button>
+                </div>
+            </div>
+
+            <hr style="margin: 15px 0;">
+
+            <h2>Animation Preview</h2>
+            <div style="display: flex; flex-direction: column;">
+                <div id="animation-preview-wrapper">
+                    <div style="display: flex; flex-direction: column; gap: 5px; flex-grow: 1;">
+                        <span style="font-weight: bold;">Speed (ms):</span>
+                        <input type="range" id="frame-speed" min="50" max="1000" value="150" step="50"
+                            oninput="document.getElementById('speed-value').textContent = this.value + 'ms'; startPreviewLoop()">
+                        <span id="speed-value" style="font-size: 0.9em;">150ms</span>
+                        <span style="font-weight: bold; margin-top: 5px;">Playback Speed:</span>
+                        <select id="playback-speed-multiplier" onchange="updatePlaybackSpeed()" style="padding: 3px;">
+                            <option value="0.25">0.25x</option>
+                            <option value="0.5">0.5x</option>
+                            <option value="1" selected>1x</option>
+                            <option value="2">2x</option>
+                            <option value="4">4x</option>
+                        </select>
+                        <button id="play-pause-btn" onclick="togglePreviewLoop()"
+                            style="margin-top: 5px; background-color: #dc3545; border-color: #dc3545;">Pause
+                            Preview</button>
+                    </div>
+                    <canvas id="animation-preview" width="128" height="128"></canvas>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-top: 5px;">
+                    <span>Frame: <strong id="preview-frame-index">1</strong> / <span
+                            id="preview-frame-count">1</span></span>
+                    <span>FPS: <strong id="preview-fps">~6.7</strong></span>
+                </div>
+            </div>
+
+            <hr style="margin: 15px 0;">
+
+            <h2>Color Palette</h2>
+            <div id="palette-preview"
+                style="display: flex; flex-wrap: wrap; gap: 3px; padding: 10px; border: 1px solid #eee; border-radius: 4px; min-height: 50px; max-height: 200px; overflow-y: auto; background-color: #f9f9f9;">
+            </div>
+
+            <div style="font-size: 0.7em; color: #666; margin-top: 8px; text-align: center;">
+                <span id="palette-color-count">0</span> colors detected
+            </div>
+
+            <!-- Palette Management Tools -->
+            <div class="tool-category" style="margin-top: 8px;">
+                <button class="category-main-btn"
+                    style="background-color: #17a2b8; border-color: #17a2b8; font-size: 0.85em;">
+                    🎨 Palette Tools
+                </button>
+                <div class="category-tools" style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                    <button onclick="updatePalette()"
+                        style="background-color: #17a2b8; border-color: #17a2b8; font-size: 0.85em;">Refresh from
+                        Sprite</button>
+                    <button onclick="addColorToPalette()"
+                        style="background-color: #28a745; border-color: #28a745; font-size: 0.85em;">Add Current
+                        Color</button>
+                    <button onclick="clearPalette()"
+                        style="background-color: #dc3545; border-color: #dc3545; font-size: 0.85em;">Clear
+                        Palette</button>
+                    <button onclick="generateGradientPalette()"
+                        style="background-color: #6f42c1; border-color: #6f42c1; font-size: 0.85em;">Generate Gradient
+                        Palette</button>
+                    <button onclick="document.getElementById('palette-import-input').click()"
+                        style="background-color: #ff9800; border-color: #ff9800; font-size: 0.85em;">📥 Import
+                        Palette</button>
+                    <button onclick="exportPalette()"
+                        style="background-color: #28a745; border-color: #28a745; font-size: 0.85em;">📤 Export
+                        PAL</button>
+                    <button onclick="exportVGAPalette()"
+                        style="background-color: #6f42c1; border-color: #6f42c1; font-size: 0.85em;">📤 Export
+                        VGA</button>
+                </div>
+            </div>
+
+            <!-- Hidden file input for palette import (accepts both PAL and VGA) -->
+            <input type="file" id="palette-import-input" accept=".pal,.vga" style="display: none;"
+                onchange="importPaletteAuto(event)">
+
+            <hr style="margin: 15px 0;">
+
+            <h2>Histogram</h2>
+            <canvas id="histogram-canvas" width="300" height="100"
+                style="width: 100%; height: 100px; border: 1px solid #eee; border-radius: 4px; background-color: #f9f9f9;"></canvas>
+            <div id="histogram-stats" style="font-size: 0.7em; color: #666; margin-top: 5px; text-align: center;">
+                RGB color distribution
+            </div>
+            <div style="display: flex; gap: 5px; margin-top: 5px;">
+                <button onclick="updateHistogram()"
+                    style="flex-grow: 1; background-color: #17a2b8; border-color: #17a2b8; font-size: 0.85em;">Update
+                    Histogram</button>
+            </div>
+            <div class="tool-category" style="margin-top: 8px;">
+                <button class="category-main-btn"
+                    style="background-color: #9c27b0; border-color: #9c27b0; font-size: 0.85em;">
+                    📊 Histogram Options
+                </button>
+                <div class="category-tools" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                    <button onclick="showHistogramChannel('r')"
+                        style="background-color: #f44336; border-color: #f44336; font-size: 0.8em;">Red Only</button>
+                    <button onclick="showHistogramChannel('g')"
+                        style="background-color: #4caf50; border-color: #4caf50; font-size: 0.8em;">Green Only</button>
+                    <button onclick="showHistogramChannel('b')"
+                        style="background-color: #2196f3; border-color: #2196f3; font-size: 0.8em;">Blue Only</button>
+                    <button onclick="showHistogramChannel('all')"
+                        style="background-color: #9c27b0; border-color: #9c27b0; font-size: 0.8em;">All
+                        Channels</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="code/utils.js"></script>
+    <script src="code/spooksies_sprite_tool.js"></script>
+
+</body>
+
+</html>

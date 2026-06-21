@@ -1,0 +1,547 @@
+/* 
+ * Spooksie's Stinky Sprite Tool - Stylesheet
+ * Version 1.0
+ */
+
+/* CSS: STYLES THE TOOL (Minimized changes for brevity) */
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+#editor-layout {
+    display: flex;
+    width: 1200px;
+    max-width: 95%;
+    gap: 20px;
+}
+
+/* --- LEFT PANEL: CONTROLS & COLOR --- */
+#controls-panel {
+    flex-shrink: 0;
+    width: 250px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-group {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+#color-picker-wrapper, #color-picker-wrapper-secondary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid #2196f3;
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#color-picker-wrapper-secondary {
+    margin-top: 5px;
+}
+
+#color-picker, #color-picker-secondary {
+    width: 60px;
+    height: 40px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+    appearance: none;
+}
+
+#color-picker::-webkit-color-swatch-wrapper, #color-picker-secondary::-webkit-color-swatch-wrapper { padding: 0; }
+#color-picker::-webkit-color-swatch, #color-picker-secondary::-webkit-color-swatch { border: none; }
+
+.control-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+button {
+    padding: 8px;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+    margin-top: 5px;
+    width: 100%; 
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.tools-grid button {
+    margin-top: 0;
+    font-size: 0.85em;
+}
+
+button:hover { background-color: #0056b3; }
+
+.zoom-controls button {
+    width: 40px;
+    padding: 5px 0;
+    font-size: 1.2em;
+}
+
+.tool-active {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin: 5px 0;
+}
+
+/* QoL INSTRUCTION BOX */
+#tool-instructions {
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    font-size: 0.8em;
+    line-height: 1.4;
+}
+
+/* Gradient Brush Length Slider */
+#gradient-length-controls {
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #6f42c1;
+    background-color: #f0f0ff;
+    border-radius: 4px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#gradient-length-controls[style*="display: block"],
+#gradient-length-controls[style*="display:block"] {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Secondary Color Section Transition */
+#secondary-color-section {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#secondary-color-section[style*="display: block"],
+#secondary-color-section[style*="display:block"] {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Shape Fill Controls Transition */
+#shape-fill-controls {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#shape-fill-controls[style*="display: block"],
+#shape-fill-controls[style*="display:block"],
+#shape-fill-controls:not([style*="display: none"]):not([style*="display:none"]) {
+    max-height: 100px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Onion Skin Controls Transition */
+#onion-skin-controls {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#onion-skin-controls[style*="display: block"],
+#onion-skin-controls[style*="display:block"],
+#onion-skin-controls:not([style*="display: none"]):not([style*="display:none"]) {
+    max-height: 300px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Pattern Fill Controls Transition */
+#pattern-fill-controls {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#pattern-fill-controls[style*="display: block"],
+#pattern-fill-controls[style*="display:block"],
+#pattern-fill-controls:not([style*="display: none"]):not([style*="display:none"]) {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tilemap Controls Transition */
+#tilemap-controls {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#tilemap-controls[style*="display: block"],
+#tilemap-controls[style*="display:block"],
+#tilemap-controls:not([style*="display: none"]):not([style*="display:none"]) {
+    max-height: 150px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Symmetry Controls Transition */
+#symmetry-controls {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#symmetry-controls[style*="display: block"],
+#symmetry-controls[style*="display:block"],
+#symmetry-controls:not([style*="display: none"]):not([style*="display:none"]) {
+    max-height: 150px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Guides Controls Transition */
+#guides-controls {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease, max-height 0.4s ease;
+}
+
+#guides-controls[style*="display: block"],
+#guides-controls[style*="display:block"],
+#guides-controls:not([style*="display: none"]):not([style*="display:none"]) {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- CENTER: MAIN CANVAS AREA --- */
+#canvas-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+#canvas-wrapper {
+    overflow: hidden; 
+    width: 640px;
+    height: 640px;
+    border: 1px solid #333;
+    background-color: #ffffff;
+    position: relative;
+    cursor: default; 
+    user-select: none;
+}
+
+#canvas-wrapper.checkerboard {
+    background-image: 
+        linear-gradient(45deg, #cccccc 25%, transparent 25%),
+        linear-gradient(-45deg, #cccccc 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #cccccc 75%),
+        linear-gradient(-45deg, transparent 75%, #cccccc 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+}
+
+/* Panning Class for visual feedback */
+#canvas-wrapper.panning {
+    cursor: grabbing;
+}
+
+/* tool-pan class for when the tool button is active */
+#canvas-wrapper.tool-pan {
+    cursor: grab;
+}
+
+#main-canvas, #grid-canvas, #selection-canvas {
+    width: 480px; 
+    height: 480px;
+    image-rendering: pixelated;
+    position: absolute;
+    transform-origin: center center; 
+}
+
+#main-canvas {
+    /* Ensure main canvas always receives pointer events even when empty */
+    background-color: transparent;
+}
+
+#grid-canvas, #selection-canvas {
+    pointer-events: none; 
+}
+
+/* --- RIGHT PANEL: ANIMATION FRAMES --- */
+#frames-panel {
+    flex-shrink: 0;
+    width: 350px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#frame-thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 250px; 
+    overflow-y: auto;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.frame-thumbnail {
+    width: 64px;
+    height: 64px;
+    border: 2px solid #ccc;
+    cursor: grab;
+    background-color: #f0f0f0; 
+    position: relative;
+    image-rendering: pixelated;
+}
+
+.frame-thumbnail:active {
+    cursor: grabbing;
+}
+
+.frame-thumbnail.active {
+    border-color: #007bff;
+    box-shadow: 0 0 5px #007bff;
+}
+
+.frame-thumbnail span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    padding: 1px 3px;
+    font-size: 0.7em;
+    line-height: 1;
+}
+
+/* Animation Preview */
+#animation-preview-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+#animation-preview {
+    width: 128px; 
+    height: 128px;
+    border: 2px solid #000;
+    image-rendering: pixelated;
+    background-color: #fff;
+    flex-shrink: 0;
+}
+
+/* --- TOOL CATEGORY EXPANDABLE SECTIONS --- */
+.tool-category {
+    position: relative;
+}
+
+/* Expand the hover hit area invisibly to give users more room for error */
+.tool-category::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    left: -5px;
+    right: -5px;
+    z-index: 0;
+    pointer-events: auto;
+}
+
+.tool-category > * {
+    position: relative;
+    z-index: 1;
+}
+
+.category-main-btn {
+    font-weight: bold;
+    font-size: 0.95em;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.category-main-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.category-main-btn::after {
+    content: '▼';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7em;
+    transition: transform 0.3s ease;
+}
+
+.tool-category.open > .category-main-btn::after,
+.tool-category.locked > .category-main-btn::after,
+.tool-category.active-category > .category-main-btn::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.tool-category.locked > .category-main-btn {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+.tool-category.active-category > .category-main-btn {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+/* Blocked category - grayed out and no interaction */
+.tool-category.blocked {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.tool-category.blocked > .category-main-btn {
+    cursor: not-allowed;
+}
+
+.category-tools {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-top: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+/* Only open when explicitly allowed (via click or long hover) */
+.tool-category.open > .category-tools,
+.tool-category.locked > .category-tools,
+.tool-category.active-category > .category-tools {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 8px;
+    transform: translateY(0);
+    pointer-events: auto;
+    overflow-y: auto;
+}
+
+.category-tools button {
+    animation: fadeInUp 0.3s ease forwards;
+    opacity: 0;
+}
+
+.tool-category.open > .category-tools > button:nth-child(1),
+.tool-category.locked > .category-tools > button:nth-child(1),
+.tool-category.active-category > .category-tools > button:nth-child(1) { animation-delay: 0.05s; }
+
+.tool-category.open > .category-tools > button:nth-child(2),
+.tool-category.locked > .category-tools > button:nth-child(2),
+.tool-category.active-category > .category-tools > button:nth-child(2) { animation-delay: 0.1s; }
+
+.tool-category.open > .category-tools > button:nth-child(3),
+.tool-category.locked > .category-tools > button:nth-child(3),
+.tool-category.active-category > .category-tools > button:nth-child(3) { animation-delay: 0.15s; }
+
+.tool-category.open > .category-tools > button:nth-child(4),
+.tool-category.locked > .category-tools > button:nth-child(4),
+.tool-category.active-category > .category-tools > button:nth-child(4) { animation-delay: 0.2s; }
+
+.tool-category.open > .category-tools > button:nth-child(5),
+.tool-category.locked > .category-tools > button:nth-child(5),
+.tool-category.active-category > .category-tools > button:nth-child(5) { animation-delay: 0.25s; }
+
+.tool-category.open > .category-tools > button:nth-child(6),
+.tool-category.locked > .category-tools > button:nth-child(6),
+.tool-category.active-category > .category-tools > button:nth-child(6) { animation-delay: 0.3s; }
+
+.tool-category.open > .category-tools > button:nth-child(7),
+.tool-category.locked > .category-tools > button:nth-child(7),
+.tool-category.active-category > .category-tools > button:nth-child(7) { animation-delay: 0.35s; }
+
+.tool-category.open > .category-tools > button:nth-child(8),
+.tool-category.locked > .category-tools > button:nth-child(8),
+.tool-category.active-category > .category-tools > button:nth-child(8) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

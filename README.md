@@ -1,6 +1,8 @@
-# 🎃 Spooksie's Stinky Sprite Tool v1.0
+# 🎃 Spooksie's Stinky Sprite Tool v2.0
 
-A powerful, feature-rich pixel art sprite editor and animator built with HTML5 Canvas. Create sprites, animate them, and export with professional-grade tools!
+**Professional-grade pixel art sprite editor and animator** built with HTML5 Canvas. Create sprites, animate them, and export with industry-standard tools!
+
+**🎊 NEW in v2.0:** 74 new features including 20 blend modes, layer masks & effects, auto-save, onion skinning, custom brushes, pattern fills, symmetry modes, transform tools, sprite atlas export, and much more! [See full changelog below](#-version-history)
 
 ## 👻 Credits
 
@@ -14,45 +16,98 @@ A powerful, feature-rich pixel art sprite editor and animator built with HTML5 C
 
 [![Preview](preview.gif)](https://tools.mewsie.world/SpriteEditor.html)
 
+---
+
+## 🚀 Quick Start (not uploading live)
+
+Open `index.html` in your web browser. That's it.
+
+**Remember**: You CANNOT export as a `.gif` if you plan on using this method!
+  Please see the section below labeled `Solutions` or `Deployment` below for
+    utilizing `.gif` export.
+
+---
+
+## 🛠️ System Requirements
+
+- Modern web browser with HTML5 Canvas support
+- Recommended: Chrome, Firefox, Edge, or Safari
+- Mouse or drawing tablet recommended
+- Keyboard for shortcuts (optional but recommended)
+
+---
+
 ## ✨ Features
 
-### 🔲 Canvas-Based Tools (6 tools)
+### 🔲 Selection Tools (6 tools)
 
 - **Rectangle** - Rectangular selection with drag-to-move
 - **Circle** - Circular selection area with drag-to-move
-- **Color** - Magic wand: select connected pixels of same color (click to select, click again to deselect)
+- **Color** - Magic wand: select connected pixels of same color (flood fill style)
 - **Lasso** - Freeform selection with 35% overlap threshold and drag-to-move
-- **Mirror** - Symmetrical drawing (auto-mirrors horizontally, respects selections)
+- **Edge Detect** - Select edges using Sobel operator
 - **Pan** - Drag canvas around (or use RMB/middle mouse)
 
-### 🖌️ Brush Tools (8 tools)
+### 🖌️ Brush Tools (12 tools)
 
 - **Pencil (Circle)** - Round brush for smooth organic drawing
 - **Pencil (Square)** - Square brush for blocky, pixel-perfect drawing
 - **1px** - Single-pixel precision (click-only, no dragging)
 - **Fill** - Flood fill contiguous areas
+- **Pattern Fill** - Fill with 8 different texture patterns (dots, grid, diagonal, etc.)
+- **Dither** - Checkerboard dithering between primary and secondary colors
 - **Jumble** - Randomly scrambles pixels in brush area (respects selections)
 - **Spray** - True scatter brush placing individual pixels randomly within radius
+- **Clone Stamp** - Alt+click to set source, then paint to copy pixels
 - **Erase Color** - Click a color to erase all instances within selection (requires active selection)
+- **Magic Eraser** - Tolerance-based eraser (removes similar colors)
 - **Eraser** - Remove pixels with circular brush
 
-### 🎨 Color Tools (6 tools)
+### 🎨 Color & Effect Tools (8 tools)
 
 - **Blend** - Smudge/blur by averaging neighbor colors
 - **Sharpen** - Increase contrast with neighbors for crisp edges
-- **Shadow** - Darkens pixels (burn/shadow effect)
+- **Depth** - Darkens pixels progressively (depth/shadow effect)
 - **Highlight** - Brightens pixels (dodge/highlight effect)
 - **Rainbow** - Shifts hue while preserving saturation/lightness
-- **Gradient** - Fades from primary to secondary color
+- **Gradient** - Fades from primary to secondary color over distance
+- **Mirror** - Symmetrical drawing with 6 modes (horizontal, vertical, quad, radial 8/16-way)
+- **Color Curves** - Adjust RGB channels using interactive bezier curves
 
-### 📐 Shape Tools (6 tools)
+### 📐 Shape Tools (8 tools)
 
 - **Line** - Click twice for pixel-perfect straight lines (Bresenham's algorithm)
-- **Curve** - Three-click bezier curves (start, end, control point)
+- **Curve** - Three-click quadratic bezier curves (start, end, control point)
+- **Bezier Brush** - Four-click cubic bezier curves for smooth flowing lines
 - **Contour** - Click points, double-click to close outline
 - **Polygon** - Click points, double-click to fill/outline (toggle fill checkbox)
-- **Rectangle** - Click and drag to draw rectangles (toggle fill)
-- **Circle** - Click and drag to draw circles (toggle fill, midpoint algorithm)
+- **Rectangle** - Click opposite corners to draw rectangles (fill + gradient options)
+- **Circle** - Click opposite points to draw circles (fill + gradient options, midpoint algorithm)
+- **Gradient Mesh** - Click 3+ points, press Enter to fill with smooth color gradients
+
+### 🪄 Advanced Tools (3 tools)
+
+- **Liquify** - Push and warp pixels in the direction of brush movement
+- **Swap Colors** - Global color replacement across all frames
+- **Color Remap (Multi)** - Remap multiple colors simultaneously
+
+### 🔄 Transform Tools (3 tools)
+
+- **Rotate 90°** - Rotate clockwise or counter-clockwise
+- **Flip** - Flip horizontal or vertical
+- **Perspective** - Apply perspective distortion to the sprite
+
+### ⚡ Batch Processing (4 tools)
+
+- **Batch Rotate** - Rotate all frames at once
+- **Batch Flip** - Flip all frames horizontal or vertical
+- **Batch Brightness** - Adjust brightness across all frames
+- **Magenta Background** - Create magenta background across all frames
+
+### 📺 Channel Operations (2 tools)
+
+- **Extract Channels** - Isolate red, green, or blue channels
+- **Invert Colors** - Invert colors of the current frame
 
 ### 📐 Layer System
 
@@ -106,6 +161,41 @@ A powerful, feature-rich pixel art sprite editor and animator built with HTML5 C
 
 ---
 
+## 🔧 Technical Notes
+
+### Browser Compatibility:
+- Modern browsers (Chrome, Firefox, Edge, Safari)
+- Requires JavaScript enabled
+- Canvas API support required
+- File API support for imports/exports
+
+### GIF Export Limitation:
+GIF export only works when the file is served via HTTP/HTTPS (not file://)
+...which then requires:
+
+### External Dependencies:
+- GIF.js library (loaded from CDN): `https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js`
+
+**Solutions:**
+1. Use a local web server (e.g., Python: `python -m http.server 8000`)
+2. Use VS Code Live Server extension
+3. Upload to a web server
+4. Use the BMP export as an alternative
+
+## 📦 Deployment
+
+To deploy this modular version:
+
+1. Upload all three files to your web server:
+   - `index.html`
+   - Everything in the `js` folder
+
+2. Keep files in the same directory
+
+3. Access via `index.html`
+
+---
+
 ## ⌨️ Keyboard Shortcuts
 
 ### Layer & Frame Management
@@ -131,15 +221,14 @@ A powerful, feature-rich pixel art sprite editor and animator built with HTML5 C
 
 ### Tool Selection
 
-**Canvas-Based Tools:**
+**Selection Tools:**
 
 | Key | Tool |
 |-----|------|
-| `S` | Rectangle (Select) |
-| `I` | Circle (Select) |
-| `K` | Color (Select) |
+| `S` | Rectangle Select |
+| `I` | Circle Select |
+| `K` | Color Select (Magic Wand) |
 | `L` | Lasso |
-| `M` | Mirror |
 | `A` | Pan |
 
 **Brush Tools:**
@@ -148,30 +237,31 @@ A powerful, feature-rich pixel art sprite editor and animator built with HTML5 C
 |-----|------|
 | `P` | Pencil (Circle) |
 | `Q` | Pencil (Square) |
-| `1` | 1px |
+| `1` | 1px Precision |
 | `F` | Fill |
 | `J` | Jumble |
 | `Y` | Spray |
 | `T` | Erase Color |
 | `E` | Eraser |
 
-**Color Tools:**
+**Color & Effect Tools:**
 
 | Key | Tool |
 |-----|------|
 | `B` | Blend |
 | `X` | Sharpen |
-| `D` | Shadow |
+| `D` | Depth (Shadow) |
 | `H` | Highlight |
 | `R` | Rainbow |
 | `G` | Gradient |
+| `M` | Mirror (Symmetrical) |
 
 **Shape Tools:**
 
 | Key | Tool |
 |-----|------|
 | `N` | Line |
-| `U` | Curve |
+| `U` | Curve (Quadratic Bezier) |
 | `C` | Contour |
 | `O` | Polygon |
 | `V` | Rectangle (Draw) |
@@ -194,8 +284,6 @@ A powerful, feature-rich pixel art sprite editor and animator built with HTML5 C
 | `Shift+E` | Export VGA 24-bit Palette |
 
 ---
-
-## 🚀 Quick Start Guide
 
 ### Basic Workflow
 
@@ -291,14 +379,26 @@ Single-pixel precision tool - click once per pixel, no dragging allowed.
 **Fill (`F`)**  
 Flood fills contiguous areas with the selected color. Respects selection boundaries.
 
+**Pattern Fill** *(Click button to activate)*  
+Fill with 8 different texture patterns: dots, grid, diagonal stripes, crosshatch, bricks, waves, checkerboard, and triangles.
+
+**Dither** *(Click button to activate)*  
+Checkerboard dithering between primary and secondary colors for retro shading effects.
+
 **Jumble (`J`)**  
 Randomly scrambles pixels in brush area for hard-dithered texture effects. Respects selection boundaries - only scrambles within selection.
 
 **Spray (`Y`)**  
 True scatter brush - places individual pixels randomly within radius (based on brush size). More particles near center, fewer at edges. Respects selection boundaries.
 
+**Clone Stamp** *(Click button to activate)*  
+Alt+click to set source point, then paint to copy pixels from that location. Perfect for duplicating patterns or textures.
+
 **Erase Color (`T`)**  
 Click any pixel color to erase ALL instances of that color within the active selection. ONLY works when a selection is active.
+
+**Magic Eraser** *(Click button to activate)*  
+Tolerance-based eraser - removes clicked color and similar colors based on tolerance setting.
 
 **Eraser (`E`)**  
 Remove pixels with circular brush pattern. Respects selection boundaries.
@@ -311,17 +411,20 @@ Smudge/blur by averaging surrounding pixel colors for smooth transitions. Respec
 **Sharpen (`X`)**  
 Increase contrast with neighboring pixels for crisp, defined edges. Very subtle effect (15% factor) - use multiple passes for stronger sharpening.
 
-**Shadow (`D`)**  
-Darkens pixels by 5% per pass - build up shadows gradually with multiple strokes.
+**Depth (`D`)**  
+Progressively darkens pixels (95% per pass) - build up depth and shadows gradually with multiple strokes.
 
 **Highlight (`H`)**  
-Brightens pixels by 5% per pass - build up highlights gradually with multiple strokes.
+Brightens pixels (105% per pass) - build up highlights gradually with multiple strokes.
 
 **Rainbow (`R`)**  
-Shifts hue while maintaining the saturation and lightness of existing colors underneath.
+Shifts hue while maintaining the saturation and lightness of existing colors underneath. One-way hue rotation - each stroke shifts 5% through the color wheel.
 
 **Gradient (`G`)**  
-Stroke fades from Primary to Secondary color over adjustable distance.
+Stroke fades from Primary to Secondary color over adjustable distance (1-100px).
+
+**Mirror (`M`)**  
+Symmetrical drawing with 6 modes: Horizontal, Vertical, Quad (4-way), Radial 8-way, and Radial 16-way. Perfect for symmetrical sprites, mandalas, and patterns.
 
 ### Shape Tools
 
@@ -329,7 +432,10 @@ Stroke fades from Primary to Secondary color over adjustable distance.
 Click start point, click end point to draw pixel-perfect straight lines using Bresenham's algorithm.
 
 **Curve (`U`)**  
-Three-click process: start point, end point, then control point for smooth quadratic bezier curves.
+Three-click quadratic bezier: start point, end point, then control point for smooth curves.
+
+**Bezier Brush** *(Click button to activate)*  
+Four-click cubic bezier curves for ultra-smooth flowing lines. Click 4 control points, automatically draws on the 4th click.
 
 **Contour (`C`)**  
 Click to add points around a shape, double-click to close the outline.
@@ -338,63 +444,96 @@ Click to add points around a shape, double-click to close the outline.
 Click to add vertices, double-click to close. Respects "Fill Shape" checkbox for filled or outline mode.
 
 **Rectangle (`V`)**  
-Click twice for opposite corners. Toggle "Fill Shape" checkbox for filled or outline mode. Orange dot shows first corner.
+Click opposite corners. Toggle "Fill Shape" for filled/outline. Enable "Gradient Fill" for diagonal gradient from primary to secondary color.
 
 **Circle (`W`)**  
-Click two opposite edge points (diameter). Center auto-calculated as midpoint. Toggle "Fill Shape" for filled circles or outlines. Orange dot shows first edge point.
+Click two opposite edge points (diameter). Center auto-calculated as midpoint. Toggle "Fill Shape" for filled/outline. Enable "Gradient Fill" for radial gradient.
+
+**Gradient Mesh** *(Click button to activate)*  
+Click 3+ points with different colors, press **Enter** to fill with smooth interpolated gradients between all points. Press **Escape** to cancel.
+
+**Liquify** *(Click button to activate)*  
+Push and warp pixels in the direction of brush movement. Creates flowing, melting, or organic distortion effects.
 
 ---
 
-## 🎛️ Interface Guide
+## Interface Guide
 
 ### Left Panel - Controls
+
 - **Current Tool Display** - Blue label shows active tool + selection type (if any)
-- **Color Pickers** - Primary and Secondary colors with hex display
+- **Color Pickers** - Primary and Secondary colors with **hex input** (type hex codes directly) and visual color picker swatch
+- **Recent Colors** - Last 16 finalized colors, click to reuse
 - **Brush Size** - 1×1 to 8×8 pixels (affects circular and square brushes)
-- **Pencil Stroke Delay** - Add timing delay for slower drawing
+- **Brush Speed** - Add timing delay between strokes for controlled drawing
 - **Selection Info** - Yellow box shows pixel count when selection is active
 - **Global Tools** - Clear frame, clear selection (keep pixels), color swap
-- **Undo/Redo** - Visual buttons with keyboard support
-- **Tool Categories** - 26 tools organized in 4 categories (2-column grid):
-  - Canvas-Based Tools (6) - Selections and special modes
-  - Brush Tools (8) - Direct drawing and painting
-  - Color Tools (6) - Color manipulation and effects
-  - Shape Tools (6) - Geometric shapes with fill options
-- **Hover Tooltips** - Each category label shows ⓘ with tool descriptions on hover
-- **Fill Shape Toggle** - Appears for Rectangle, Circle, and Polygon shape tools
+- **Undo/Redo** - Visual buttons with keyboard support (Ctrl+Z/Ctrl+Y)
+- **Collapsible Tool Categories** - 35+ tools organized in 9 expandable categories:
+  - 🛠️ Global Tools (3) - Clear, selection, swap
+  - 📐 Canvas Tools (6) - Selection tools and pan
+  - 🖌️ Brush Tools (12) - Drawing, fill, pattern, dither, clone, erase
+  - 🎨 Color Tools (7) - Blend, sharpen, depth, highlight, rainbow, gradient, mirror
+  - ⬜ Shape Tools (8) - Line, curves, polygons, rectangles, circles, gradient mesh
+  - 💾 Image Export (3) - PNG, BMP, GIF
+  - 🎞️ Frame Tools (3) - Clone, blank, delete frame
+  - 📥 Import Palette (2) - PAL, VGA
+  - 📤 Export Palette (2) - PAL, VGA
+- **Click-to-Lock** - Click category header to keep it expanded
+- **Gradient Controls** - Max length slider (appears when Gradient tool active)
+- **Fill Shape Controls** - Fill/outline checkbox + gradient fill option (Rectangle, Circle, Polygon)
+- **Pattern Fill Controls** - 8 pattern presets (dots, grid, diagonal, crosshatch, bricks, waves, checker, triangles)
+- **Symmetry Controls** - 6 modes for Mirror tool (horizontal, vertical, quad, radial 8/16)
+- **Custom Brush Editor** - Draw your own brush patterns (8×8 grid)
 
 ### Center Panel - Canvas & Settings
-- **Tool Status Bar** - Blue bar shows progress for multi-step tools (Line, Curve, Polygon, etc.)
+
+- **Tool Status Bar** - Blue bar shows progress for multi-step tools (Line, Curve, Polygon, Bezier, Gradient Mesh, etc.)
 - **Main Canvas** - 480×480px viewing area with dynamic aspect ratio support
-- **Visual Indicators** - Colored dots show points for Line (red), Curve (blue), Polygon/Contour (green)
-- **Sprite Size** - Adjust dimensions with linked/unlinked width/height (supports non-square)
-- **Change Size & Migrate Data** - Button to apply dimension changes with pixel scaling
-- **Canvas Zoom** - 0.5× to 16× zoom controls
-- **Grid Options** - Two-column layout:
-  - **Left:** Grid visibility, line color, darkened grid pattern with custom color
-  - **Right:** Canvas background presets and custom color
-- **Darkened Grid Pattern** - Major grid lines every N cells (auto-adjusts with √dimension when linked)
-- **Export Options** - PNG, BMP, and Palette export buttons
+- **Visual Indicators** - Colored dots show points for Line (red), Curve (blue), Polygon/Contour (green), Bezier (purple)
+- **Sprite Size** - Adjust dimensions 8-64 pixels with linked/unlinked width/height (supports non-square like 16×32)
+- **Grid Presets** - Quick dimension buttons: NES (8×8), SNES (16×16), GB (8×8), GBA (32×32)
+- **Canvas Zoom** - 0.5× to 16× zoom with scroll wheel support
+- **Grid Options** - Collapsible section with visibility, line color, darkened grid pattern
+- **Canvas Background** - Presets (transparent, white, black, checker) or custom color (affects BMP export)
+- **Export Options** - Collapsible sections for PNG sprite sheet, BMP frames, GIF animation, palettes
 
 ### Right Panel - Layers & Animation
-- **Layers List** - Hierarchical layer management
-  - ☰ Drag handle for reordering
+
+- **Layers List** - Per-frame layer management with full controls:
+  - ☰ Drag handle for reordering (drag and drop)
   - 👁 Visibility toggle
-  - Click to select layer
-  - Double-click name to rename
-- **Animation Frames** - Frame thumbnails with management buttons
+  - Click to select layer, double-click name to rename
+  - **Opacity slider** (0-100%) per layer
+  - **Blend mode dropdown** - 20 modes (Normal, Multiply, Screen, Overlay, Dodge, Burn, etc.)
+  - **🎭 Mask button** - Enter mask editing mode (paint black to hide, white to reveal)
+  - **✨ Effects button** - Drop shadow, outer glow, stroke effects
+  - Visual indicator when editing mask (orange border)
+- **Layer Controls** - Add layer (Shift+L), delete layer, merge down
+- **Animation Frames** - Frame thumbnails (64×64px) with management:
   - ◄ ► Arrow buttons to move frames with wraparound
   - Drag & drop frame thumbnails to reorder
+  - Right-click to add frame tags
   - New frames insert after current frame
-- **Animation Preview** - Live playback with speed and FPS controls
-- **Color Palette** - Live preview of all unique colors
-  - Click colors to select them
+  - Clone (copies all layers) or Blank frame options
+- **Animation Timeline** - Scrubber with playback controls and frame duration editor
+- **Animation Preview** - Live 128×128px playback with speed (50-1000ms) and FPS display
+- **Playback Speed Multiplier** - 0.25× to 4× playback speed without changing frame data
+- **Onion Skinning** - Toggle to see previous/next frames with adjustable opacity and frame count
+- **Color Palette** - Live preview of all unique colors across all frames:
+  - Click colors to select them as primary color
   - Refresh button to update palette
+  - Palette management (generate gradients, add/remove colors manually)
   - Import PAL (JASC text format, auto-deduplicates)
-  - Export PAL (JASC text format)
+  - Export PAL (JASC text format, variable size)
   - Import VGA (24-bit binary, auto-deduplicates)
-  - Export VGA (24-bit binary, 256 colors)
+  - Export VGA (24-bit binary, 256 colors with background fill)
   - Color count display
+- **Advanced Features** (collapsible):
+  - Histogram with per-channel RGB stats
+  - Transform tools (rotate, flip, perspective) - apply to current frame OR all frames
+  - Channel operations (extract R/G/B, invert)
+  - Tilemap mode for game sprites
 
 ---
 
@@ -482,7 +621,7 @@ Click two opposite edge points (diameter). Center auto-calculated as midpoint. T
 
 - **Canvas Resolution**: 480×480px display area
 - **Default Sprite Size**: 16×16 pixels
-- **Sprite Size Range**: 8×8 to 64×64 pixels (width and height independent)
+- **Default Sprite Size Range**: 8×8 to 64×64 pixels (width and height independent)
 - **Aspect Ratio**: Supports non-square canvases (e.g., 16×20, 32×8, 8×24)
 - **Pixel Scale**: Dynamic based on max(width, height)
 - **Max Zoom**: 16×
@@ -492,11 +631,15 @@ Click two opposite edge points (diameter). Center auto-calculated as midpoint. T
 - **Undo Buffer**: 50 steps (includes dimension changes)
 - **Export Formats**: PNG, BMP-v24 (true binary), JASC-PAL (text), VGA 24-bit (binary), Animated GIF
 - **Palette Import**: JASC-PAL (.pal text) and VGA 24-bit (.pal, .vga binary)
-- **Total Tools**: 26 unique tools across 4 categories
+- **Total Tools**: 46 unique tools across 8 categories
   - Canvas-Based: 6 tools
-  - Brush: 8 tools
-  - Color: 6 tools
-  - Shape: 6 tools
+  - Brush: 12 tools
+  - Color & Effect: 8 tools
+  - Shape: 8 tools
+  - Advanced: 3 tools
+  - Transform: 3 tools
+  - Batch Processing: 4 tools
+  - Channel: 2 tools
 - **Color Palette**: Automatic detection with deduplication on import
 - **Brush Patterns**: Circular (Pencil, Eraser) and Square (Pencil Square, all others)
 - **Spray Tool**: Scatter algorithm with radial distribution (not brush-based)
@@ -504,36 +647,24 @@ Click two opposite edge points (diameter). Center auto-calculated as midpoint. T
 
 ---
 
-## 🛠️ System Requirements
+## 📄 Repository File Structure
 
-- Modern web browser with HTML5 Canvas support
-- Recommended: Chrome, Firefox, Edge, or Safari
-- Mouse or drawing tablet recommended
-- Keyboard for shortcuts (optional but recommended)
-
----
-
-## 🎮 Getting Started
-
-1. Open `spooksies_sprite_tool.html` in your web browser
-2. The tool loads with a 16×16 canvas and one layer
-3. Browse **4 tool categories** - hover over ⓘ for descriptions
-4. Select **Pencil (Circle)** (`P`) or **Pencil (Square)** (`Q`) and start drawing!
-5. Use **Ctrl+Z** to undo mistakes
-6. Try **Color Tools** for effects: Blend, Sharpen, Shadow, Highlight, Rainbow, Gradient
-7. Create layers with **Shift+L** for complex artwork
-8. Add frames with **Shift+F** to animate
-9. Use **Shape Tools** for precise geometry (toggle fill option)
-10. Export your palette: **JASC-PAL** or **VGA 24-bit** (**Shift+E**)
-11. Import **JASC-PAL** or **VGA** palettes to load color schemes
-12. Export your masterpiece with **Shift+P** for PNG
-
----
-
-## 📝 License & Usage
-
-This tool is free to use for creating pixel art and sprites. Feel free to modify and extend it for your own projects!
-
+Spooksies-Stinky-Sprite-Tool/
+│
+├── index.html                      (entry point - click here to run!)
+├── README.md                       (documentation)
+├── LICENSE                         (license)
+├── changelog.md                    (changelog)
+├── preview.gif                     (preview image)
+│
+├── code/                           (all code files)
+│   ├── spooksies_sprite_tool.css   (styles)
+│   ├── spooksies_sprite_tool.js    (main logic)
+│   └── utils.js                    (utilities)
+│
+└── AAA OLD/                (archived old versions)
+    └── v1.0/
+    
 ---
 
 ## 🐛 Known Limitations
@@ -543,39 +674,9 @@ This tool is free to use for creating pixel art and sprites. Feel free to modify
 
 ---
 
-## 🎉 Version History
+## 📝 License & Usage
 
-**v1.0** - Major Feature Release (26 Tools Total)
-- Organized tools into 4 categories with hover tooltips
-- Added Pencil (Square) and Sharpen tools
-- Implemented circular vs square brush patterns
-- Erase Color tool: removes clicked color within selection boundaries (replaces text tool)
-- Blend tool: 50/50 mix with neighbors for subtle smudging
-- Sharpen tool: 15% intensity for gentle edge enhancement
-- Non-square canvas support with aspect ratio scaling
-- Shape tools: Line, Rectangle, Circle, Contour, Polygon, Curve
-- Color tools: Blend, Sharpen, Shadow (5%), Highlight (5%), Rainbow, Gradient
-- Selection tools: Rectangle, Circle, Color Select (magic wand), Lasso
-- Jumble tool respects selection boundaries
-- True BMP-v24 export (proper binary format)
-- Animated GIF export (gif.js library integration)
-- Color palette system with live preview
-- JASC-PAL import/export (text format)
-- VGA 24-bit import/export (binary format)
-- Automatic deduplication on all palette imports
-- Darkened grid pattern with auto-adjustment
-- Frame rearrangement with arrow buttons and drag-and-drop
-- Visual feedback: tool status bar and colored point indicators
-- Selection masking: active selections constrain all drawing tools
-- Fill shape toggle for Rectangle, Circle, Polygon tools
-- New frames insert after current frame
-- 26 keyboard shortcuts + Shift+E for VGA export
-- Added frame-based layer system
-- Implemented Rect Select and Lasso tools
-- Full undo/redo with 50-step history
-- Comprehensive keyboard shortcuts
-- Drag & drop layer reordering
-- Layer renaming and visibility controls
+This tool is free to use for creating pixel art and sprites. Feel free to modify and extend it for your own projects!
 
 ---
 
