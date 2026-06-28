@@ -4,7 +4,7 @@
 
 ## 👻 Credits
 
-**Foundation & Core Development:** 🎃 **Spooki** of CoraTO  
+**Initial 10 Features and Idea:** 🎃 **Spooki** of CoraTO  
 **Additional Features & Refinements:** 🐱 **Mewsie** of CoraTO
 
 ---
