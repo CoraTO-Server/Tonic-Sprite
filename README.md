@@ -1,4 +1,4 @@
-# 🎃 Spooksie's Stinky Sprite Tool v2.0
+# Tonic Sprite v2.0
 
 **Professional-grade pixel art sprite editor and animator** built with HTML5 Canvas. Create sprites, animate them, and export with industry-standard tools!
 
